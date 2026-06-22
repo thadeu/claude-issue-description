@@ -1,6 +1,6 @@
 # Examples
 
-## Stakeholder postmortem (`/issue:desc`)
+## Stakeholder postmortem (`/issue desc`)
 
 ```markdown
 ## Postmortem — User signup redirect loop
@@ -22,7 +22,7 @@ Affected users could not complete signup after their first payment.
 Deploy the code fix to production so new signups cannot hit the same loop.
 ```
 
-## Stakeholder short (`/issue:desc` — Slack style)
+## Stakeholder short (`/issue desc` — Slack style)
 
 ```markdown
 **Summary:** Signup loop after first paid invoice with no attendant on the account.
@@ -31,7 +31,7 @@ Deploy the code fix to production so new signups cannot hit the same loop.
 **Status:** User unblocked; permanent fix deploy pending.
 ```
 
-## Developer issue (`/issue:tech`)
+## Developer issue (`/issue tech`)
 
 ```markdown
 ## Bug — Infinite redirect on /payments/acknowledge
@@ -68,7 +68,7 @@ Skip `check_attendants_and_redirect!` on `PaymentsController#acknowledge` (and `
 - [ ] Affected users verified
 ```
 
-## Deploy note (`/issue:desc deploy`)
+## Deploy note (`/issue desc deploy`)
 
 ```markdown
 ## Deploy — First payment acknowledgment in onboarding

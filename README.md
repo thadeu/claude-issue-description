@@ -4,61 +4,56 @@ Agent skill that turns technical work into **ready-to-paste markdown** for task 
 
 **Tool-agnostic.** No APIs, no vendor-specific formatting. Works with Trello, Linear, Jira, GitHub Issues, Notion, Slack, email, or any text field.
 
-## Commands
+## Command
 
-| Command | Audience | Output |
-|---------|----------|--------|
-| `/issue:desc` | Stakeholders (CTO, PM, ops) | Short plain-language summary |
-| `/issue:description` | Same as `/issue:desc` | Alias |
-| `/issue:tech` | Developers | Technical body with repro steps and checklist |
+One slash command, two types:
+
+```
+/issue                    # stakeholder summary (default)
+/issue desc postmortem    # same, explicit type
+/issue tech               # developer issue body
+/issue tech bug           # technical bug report
+/issue desc en incident   # English stakeholder incident
+/issue tech pt pr         # Portuguese PR technical summary
+```
+
+| Type | Aliases | Audience |
+|------|---------|----------|
+| `desc` | `description` | Stakeholders (CTO, PM, ops) |
+| `tech` | `dev` | Developers |
+
+### `desc` modes
+
+`postmortem` (default), `incident`, `deploy`, `pr`, `commit`, `diff`
+
+Sections: what happened, why, impact, how we fixed it, prevention.
+
+### `tech` modes
+
+`bug` (default), `task`, `pr`, `commit`, `diff`
+
+Sections: summary, repro steps, expected vs actual, root cause, fix, developer notes, checklist.
 
 ## Language
 
-**Automatic by default** — output matches the language you use in the session.
+**Automatic by default** — matches your session language.
 
-**Override** by passing a language token in arguments:
+**Override** with a language token:
 
 ```
-/issue:desc en postmortem
-/issue:tech pt
-/issue:desc --lang=es
+/issue en desc postmortem
+/issue tech pt
+/issue desc --lang=es
 ```
 
-Supported shortcuts: `en`, `pt`, `pt-br`, `es`, or `--lang=<code>`.
+Supported: `en`, `pt`, `pt-br`, `es`, `--lang=<code>`.
 
-## What it does
+## Context sources
 
-Pulls context from the current conversation and, when useful:
-
-1. Git status + diff (uncommitted changes)
-2. Last commit
-3. Open PR (`gh pr view` / `gh pr diff`)
-
-### `/issue:desc` — stakeholder summary
-
-For non-technical readers. Typical sections:
-
-- **What happened** — symptom in user/business terms
-- **Why** — root cause in plain language
-- **Impact** — who was affected
-- **How we fixed it** — immediate + permanent fix
-- **Prevention** — what stops recurrence
-
-Modes: `postmortem` (default), `incident`, `deploy`, `pr`, `commit`, `diff`.
-
-### `/issue:tech` — developer issue body
-
-For engineers picking up the ticket. Includes:
-
-- Summary
-- Steps to reproduce
-- Expected vs actual behavior
-- Root cause (files, controllers, data state)
-- Fix
-- Developer notes
-- Checklist
-
-Modes: `bug` (default), `task`, `pr`, `commit`, `diff`.
+1. Current conversation
+2. Git status + diff
+3. Last commit
+4. Open PR (`gh pr view` / `gh pr diff`)
 
 ## Install
 
@@ -68,7 +63,7 @@ Modes: `bug` (default), `task`, `pr`, `commit`, `diff`.
 npx skills add thadeu/claude-issue-description -g -a claude-code -a cursor -y
 ```
 
-### Option B — `install.sh` (skill + slash commands)
+### Option B — `install.sh` (skill + `/issue` slash command)
 
 ```bash
 git clone https://github.com/thadeu/claude-issue-description ~/code/claude-issue-description
@@ -77,39 +72,17 @@ git clone https://github.com/thadeu/claude-issue-description ~/code/claude-issue
 
 Symlinks:
 
-- `~/.claude/skills/issue-description` → `skills/issue-description`
-- `~/.claude/commands/issue` → `commands/`
+- `~/.claude/skills/issue` → `skills/issue`
+- `~/.claude/commands/issue.md` → `commands/issue.md`
 
 Re-run `install.sh` after `git pull`.
-
-## Usage
-
-```
-/issue:desc
-/issue:desc postmortem
-/issue:desc en incident
-/issue:description deploy
-/issue:tech
-/issue:tech pr
-/issue:tech pt bug
-```
-
-Natural language also works:
-
-- "write an issue description for the card"
-- "postmortem for the CTO"
-- "technical issue body with repro steps"
-- "slack summary of the fix"
 
 ## Layout
 
 ```
 claude-issue-description/
-├── skills/issue-description/SKILL.md
-├── commands/
-│   ├── desc.md          # /issue:desc
-│   ├── description.md   # /issue:description (alias)
-│   └── tech.md          # /issue:tech
+├── skills/issue/SKILL.md
+├── commands/issue.md
 ├── examples.md
 ├── install.sh
 └── README.md
