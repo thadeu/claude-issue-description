@@ -1,10 +1,10 @@
 ---
-description: trello:description — short postmortem or card description for any task manager
+description: issue:description — short postmortem or card description for any task manager
 ---
 
 Generate a short, non-technical summary ready to paste into Trello, Linear, Jira, GitHub Issues, Notion, Slack, or email.
 
-Follow the `trello` skill (`~/.claude/skills/trello/SKILL.md`).
+Follow the `issue-description` skill (`~/.claude/skills/issue-description/SKILL.md`).
 
 Optional mode from the user: `$ARGUMENTS` — one of `postmortem`, `incident`, `deploy`, `pr`, `commit`, `diff`.
 

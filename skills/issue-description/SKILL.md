@@ -1,25 +1,24 @@
 ---
-name: trello
+name: issue-description
 description: >-
   Generate short, non-technical summaries ready to paste into any task manager
   or chat (Trello, Linear, Jira, GitHub Issues, Notion, Slack, email, CTO
-  updates). Use when the user types /trello:description, asks for a card
-  description, issue description, postmortem, incident summary, or wants to
-  explain a fix to a non-technical leader. Tool-agnostic — outputs plain
-  markdown only. Pulls context from the current conversation, git diff, last
-  commit, or open PR.
+  updates). Use when the user types /issue:description, asks for a card or issue
+  description, postmortem, incident summary, or wants to explain a fix to a
+  non-technical leader. Tool-agnostic — outputs plain markdown only. Pulls
+  context from the current conversation, git diff, last commit, or open PR.
 disable-model-invocation: true
 argument-hint: "[postmortem|incident|deploy|pr|commit|diff]"
 allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git log:*), Bash(git branch:*), Bash(git rev-parse:*), Bash(gh pr view:*), Bash(gh pr diff:*)
 ---
 
-# trello — summaries for non-technical audiences
+# issue-description — summaries for non-technical audiences
 
 Turn technical work into a short update a CTO or PM can read in under a minute.
 
 **Tool-agnostic.** Output is plain markdown — paste into Trello, Linear, Jira, GitHub Issues, Notion, Slack, email, or any card description field. No tool-specific syntax or API.
 
-The slash command `/trello:description` is optional sugar. If it is not installed, run the same flow from natural-language triggers in the description above.
+The slash command `/issue:description` is optional sugar. If it is not installed, run the same flow from natural-language triggers in the description above.
 
 ## Audience
 

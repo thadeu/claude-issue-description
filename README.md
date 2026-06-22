@@ -1,8 +1,8 @@
-# claude-trello
+# claude-issue-description
 
 Agent skill that turns technical work into **short, plain-language updates** for stakeholders.
 
-**Tool-agnostic.** The output is plain markdown — paste it into Trello, Linear, Jira, GitHub Issues, Notion, Slack, email, or any card description field. The `/trello:` namespace is just the slash-command name; nothing is Trello-specific.
+**Tool-agnostic.** The output is plain markdown — paste it into Trello, Linear, Jira, GitHub Issues, Notion, Slack, email, or any card description field.
 
 ## What it does
 
@@ -11,7 +11,7 @@ Given the current conversation (and optionally git diff, last commit, or open PR
 Typical use cases:
 
 - Postmortem after a production incident
-- Card description for a bug or task
+- Card / issue description for a bug or task
 - Slack thread summary
 - Deploy note for leadership
 
@@ -20,33 +20,33 @@ Typical use cases:
 ### Option A — `npx skills add` (skill only)
 
 ```bash
-npx skills add thadeu/claude-trello -g -a claude-code -a cursor -y
+npx skills add thadeu/claude-issue-description -g -a claude-code -a cursor -y
 ```
 
-### Option B — `install.sh` (skill + `/trello:description` slash command)
+### Option B — `install.sh` (skill + `/issue:description` slash command)
 
 ```bash
-git clone https://github.com/thadeu/claude-trello ~/code/claude-trello
-~/code/claude-trello/install.sh
+git clone https://github.com/thadeu/claude-issue-description ~/code/claude-issue-description
+~/code/claude-issue-description/install.sh
 ```
 
 Symlinks:
 
-- `~/.claude/skills/trello` → `skills/trello`
-- `~/.claude/commands/trello` → `commands/`
+- `~/.claude/skills/issue-description` → `skills/issue-description`
+- `~/.claude/commands/issue` → `commands/`
 
 Re-run `install.sh` after `git pull` to pick up slash-command changes.
 
 ## Usage
 
 ```
-/trello:description
-/trello:description postmortem
-/trello:description incident
-/trello:description deploy
-/trello:description pr
-/trello:description commit
-/trello:description diff
+/issue:description
+/issue:description postmortem
+/issue:description incident
+/issue:description deploy
+/issue:description pr
+/issue:description commit
+/issue:description diff
 ```
 
 Natural language also works:
@@ -82,11 +82,11 @@ Shorter variant available for Slack or one-liner updates.
 ## Layout
 
 ```
-claude-trello/
-├── skills/trello/SKILL.md   # main skill (npx skills add entrypoint)
-├── commands/description.md  # /trello:description slash command
-├── examples.md              # reference outputs
-├── install.sh               # symlink installer for slash commands
+claude-issue-description/
+├── skills/issue-description/SKILL.md
+├── commands/description.md       # /issue:description
+├── examples.md
+├── install.sh
 └── README.md
 ```
 

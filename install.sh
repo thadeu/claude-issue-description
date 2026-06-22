@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# claude-trello — installer
+# claude-issue-description — installer
 #
 # Symlinks this repo into Claude Code discovery paths:
-#   ~/.claude/skills/trello  → skills/trello (skill discovery)
-#   ~/.claude/commands/trello → commands/     (/trello:* slash commands)
+#   ~/.claude/skills/issue-description  → skills/issue-description
+#   ~/.claude/commands/issue            → commands/  (/issue:* slash commands)
 #
 # Re-run safely: existing symlinks are replaced.
 
@@ -11,17 +11,17 @@ set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CLAUDE_DIR="${CLAUDE_DIR:-$HOME/.claude}"
-SKILL_DIR="$CLAUDE_DIR/skills/trello"
-COMMANDS_DIR="$CLAUDE_DIR/commands/trello"
+SKILL_DIR="$CLAUDE_DIR/skills/issue-description"
+COMMANDS_DIR="$CLAUDE_DIR/commands/issue"
 
 GREEN=$'\033[0;32m'
 YELLOW=$'\033[1;33m'
 RED=$'\033[0;31m'
 NC=$'\033[0m'
 
-log()  { printf '%s[claude-trello]%s %s\n' "$GREEN" "$NC" "$*"; }
-warn() { printf '%s[claude-trello]%s %s\n' "$YELLOW" "$NC" "$*"; }
-err()  { printf '%s[claude-trello]%s %s\n' "$RED" "$NC" "$*" >&2; }
+log()  { printf '%s[issue-description]%s %s\n' "$GREEN" "$NC" "$*"; }
+warn() { printf '%s[issue-description]%s %s\n' "$YELLOW" "$NC" "$*"; }
+err()  { printf '%s[issue-description]%s %s\n' "$RED" "$NC" "$*" >&2; }
 
 link() {
   local src="$1"
@@ -48,17 +48,17 @@ link() {
 }
 
 log "installing from $REPO_DIR"
-link "$REPO_DIR/skills/trello" "$SKILL_DIR"
-link "$REPO_DIR/commands"       "$COMMANDS_DIR"
+link "$REPO_DIR/skills/issue-description" "$SKILL_DIR"
+link "$REPO_DIR/commands"              "$COMMANDS_DIR"
 
 cat <<EOF
 
 ${GREEN}Done.${NC}
 
 Try in Claude Code or Cursor:
-  /trello:description
-  /trello:description postmortem
-  /trello:description deploy
+  /issue:description
+  /issue:description postmortem
+  /issue:description deploy
 
 Or ask: "gera uma description pro card do que fizemos"
 EOF
