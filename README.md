@@ -1,19 +1,64 @@
 # claude-issue-description
 
-Agent skill that turns technical work into **short, plain-language updates** for stakeholders.
+Agent skill that turns technical work into **ready-to-paste markdown** for task managers and dev teams.
 
-**Tool-agnostic.** The output is plain markdown — paste it into Trello, Linear, Jira, GitHub Issues, Notion, Slack, email, or any card description field.
+**Tool-agnostic.** No APIs, no vendor-specific formatting. Works with Trello, Linear, Jira, GitHub Issues, Notion, Slack, email, or any text field.
+
+## Commands
+
+| Command | Audience | Output |
+|---------|----------|--------|
+| `/issue:desc` | Stakeholders (CTO, PM, ops) | Short plain-language summary |
+| `/issue:description` | Same as `/issue:desc` | Alias |
+| `/issue:tech` | Developers | Technical body with repro steps and checklist |
+
+## Language
+
+**Automatic by default** — output matches the language you use in the session.
+
+**Override** by passing a language token in arguments:
+
+```
+/issue:desc en postmortem
+/issue:tech pt
+/issue:desc --lang=es
+```
+
+Supported shortcuts: `en`, `pt`, `pt-br`, `es`, or `--lang=<code>`.
 
 ## What it does
 
-Given the current conversation (and optionally git diff, last commit, or open PR), it writes a ready-to-paste summary for a **non-technical audience** — CTO, PM, ops lead.
+Pulls context from the current conversation and, when useful:
 
-Typical use cases:
+1. Git status + diff (uncommitted changes)
+2. Last commit
+3. Open PR (`gh pr view` / `gh pr diff`)
 
-- Postmortem after a production incident
-- Card / issue description for a bug or task
-- Slack thread summary
-- Deploy note for leadership
+### `/issue:desc` — stakeholder summary
+
+For non-technical readers. Typical sections:
+
+- **What happened** — symptom in user/business terms
+- **Why** — root cause in plain language
+- **Impact** — who was affected
+- **How we fixed it** — immediate + permanent fix
+- **Prevention** — what stops recurrence
+
+Modes: `postmortem` (default), `incident`, `deploy`, `pr`, `commit`, `diff`.
+
+### `/issue:tech` — developer issue body
+
+For engineers picking up the ticket. Includes:
+
+- Summary
+- Steps to reproduce
+- Expected vs actual behavior
+- Root cause (files, controllers, data state)
+- Fix
+- Developer notes
+- Checklist
+
+Modes: `bug` (default), `task`, `pr`, `commit`, `diff`.
 
 ## Install
 
@@ -23,7 +68,7 @@ Typical use cases:
 npx skills add thadeu/claude-issue-description -g -a claude-code -a cursor -y
 ```
 
-### Option B — `install.sh` (skill + `/issue:description` slash command)
+### Option B — `install.sh` (skill + slash commands)
 
 ```bash
 git clone https://github.com/thadeu/claude-issue-description ~/code/claude-issue-description
@@ -35,56 +80,36 @@ Symlinks:
 - `~/.claude/skills/issue-description` → `skills/issue-description`
 - `~/.claude/commands/issue` → `commands/`
 
-Re-run `install.sh` after `git pull` to pick up slash-command changes.
+Re-run `install.sh` after `git pull`.
 
 ## Usage
 
 ```
-/issue:description
-/issue:description postmortem
-/issue:description incident
+/issue:desc
+/issue:desc postmortem
+/issue:desc en incident
 /issue:description deploy
-/issue:description pr
-/issue:description commit
-/issue:description diff
+/issue:tech
+/issue:tech pr
+/issue:tech pt bug
 ```
 
 Natural language also works:
 
-- "gera uma description pro card"
-- "postmortem pro CTO do que aconteceu"
-- "resumo pro Slack do fix"
-- "issue description for Linear"
-
-## Context sources
-
-The agent uses, in order:
-
-1. Current conversation
-2. Git status + diff (uncommitted changes)
-3. Last commit
-4. Open PR (`gh pr view` / `gh pr diff`) when relevant
-
-## Output
-
-Plain markdown. No API calls, no tool-specific formatting. Works anywhere that accepts text.
-
-Default sections (postmortem):
-
-- **O que aconteceu** — symptom in user/business terms
-- **Por quê** — root cause in plain language
-- **Impacto** — who was affected
-- **Como resolvemos** — immediate fix + permanent fix
-- **Prevenção** — what stops recurrence
-
-Shorter variant available for Slack or one-liner updates.
+- "write an issue description for the card"
+- "postmortem for the CTO"
+- "technical issue body with repro steps"
+- "slack summary of the fix"
 
 ## Layout
 
 ```
 claude-issue-description/
 ├── skills/issue-description/SKILL.md
-├── commands/description.md       # /issue:description
+├── commands/
+│   ├── desc.md          # /issue:desc
+│   ├── description.md   # /issue:description (alias)
+│   └── tech.md          # /issue:tech
 ├── examples.md
 ├── install.sh
 └── README.md

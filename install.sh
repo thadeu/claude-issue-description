@@ -56,9 +56,10 @@ cat <<EOF
 ${GREEN}Done.${NC}
 
 Try in Claude Code or Cursor:
-  /issue:description
-  /issue:description postmortem
-  /issue:description deploy
+  /issue:desc
+  /issue:desc en postmortem
+  /issue:tech
+  /issue:tech pt bug
 
-Or ask: "gera uma description pro card do que fizemos"
+Aliases: /issue:description → /issue:desc
 EOF

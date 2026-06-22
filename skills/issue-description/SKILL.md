@@ -1,44 +1,66 @@
 ---
 name: issue-description
 description: >-
-  Generate short, non-technical summaries ready to paste into any task manager
-  or chat (Trello, Linear, Jira, GitHub Issues, Notion, Slack, email, CTO
-  updates). Use when the user types /issue:description, asks for a card or issue
-  description, postmortem, incident summary, or wants to explain a fix to a
-  non-technical leader. Tool-agnostic — outputs plain markdown only. Pulls
-  context from the current conversation, git diff, last commit, or open PR.
+  Generate issue descriptions from conversation, git diff, commits, or PRs.
+  /issue:desc (or /issue:description) writes plain-language summaries for
+  stakeholders. /issue:tech writes technical notes for developers (repro steps,
+  root cause, checklist). Tool-agnostic markdown for Trello, Linear, Jira,
+  GitHub Issues, Notion, Slack, or email. Language follows the session by
+  default; override with en, pt, es, or --lang=xx in arguments.
 disable-model-invocation: true
-argument-hint: "[postmortem|incident|deploy|pr|commit|diff]"
+argument-hint: "[en|pt|es|--lang=xx] [postmortem|incident|deploy|pr|commit|diff]"
 allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git log:*), Bash(git branch:*), Bash(git rev-parse:*), Bash(gh pr view:*), Bash(gh pr diff:*)
 ---
 
-# issue-description — summaries for non-technical audiences
+# issue-description
 
-Turn technical work into a short update a CTO or PM can read in under a minute.
+Turn technical work into ready-to-paste markdown for task managers or dev teams.
 
-**Tool-agnostic.** Output is plain markdown — paste into Trello, Linear, Jira, GitHub Issues, Notion, Slack, email, or any card description field. No tool-specific syntax or API.
+**Tool-agnostic.** No APIs, no vendor-specific fields. Paste anywhere that accepts text.
 
-The slash command `/issue:description` is optional sugar. If it is not installed, run the same flow from natural-language triggers in the description above.
+## Commands
 
-## Audience
+| Command | Audience | Output |
+|---------|----------|--------|
+| `/issue:desc` | Stakeholders (CTO, PM, ops) | Short plain-language summary |
+| `/issue:description` | Same as `/issue:desc` | Alias |
+| `/issue:tech` | Developers | Technical issue body with repro steps and checklist |
 
-Write for a **technical leader who is not in the weeds** — CTO, head of product, ops lead.
+If slash commands are not installed, natural-language triggers in the skill description still work.
 
-- Plain language. No jargon unless unavoidable; define it in one line when needed.
-- Short sentences. No code blocks unless the user explicitly asks.
-- Focus on **what happened**, **who was affected**, **why**, and **how we fixed it**.
-- Portuguese by default when the user writes in Portuguese; English when they write in English.
+## Language
 
-## Context sources (use all that apply)
+**Default: automatic.** Match the language the user writes in during the session.
+
+**Override:** pass a language as the first argument (before the mode):
+
+| Argument | Language |
+|----------|----------|
+| `en`, `english` | English |
+| `pt`, `pt-br`, `portuguese` | Portuguese |
+| `es`, `spanish` | Spanish |
+| `--lang=en`, `--lang=pt` | Explicit flag (any ISO-style code) |
+
+Examples:
+
+```
+/issue:desc pt postmortem
+/issue:tech en
+/issue:desc --lang=es incident
+```
+
+Section headings and body text must both use the selected language.
+
+## Context sources
 
 Priority order:
 
-1. **Current conversation** — the main source. What was investigated, found, and changed.
-2. **Git working tree** — uncommitted/staged changes when the work is not committed yet.
-3. **Last commit** — when the fix is already committed.
-4. **Open PR** — when the user mentions a PR or `$ARGUMENTS` contains `pr`.
+1. **Current conversation**
+2. **Git working tree** — uncommitted/staged changes
+3. **Last commit**
+4. **Open PR** — when the user mentions a PR or mode is `pr`
 
-Do not invent facts. If something is unclear, say what is known and mark the gap briefly.
+Do not invent facts. Mark unknowns briefly.
 
 ### Git context (run when in a git repo)
 
@@ -57,74 +79,157 @@ gh pr view --json title,body,url,commits 2>/dev/null
 gh pr diff 2>/dev/null
 ```
 
-## Mode selection
+---
 
-Use `$ARGUMENTS` or infer from the conversation:
+## `/issue:desc` — stakeholder summary
+
+### Audience
+
+Technical leader who is **not** in the weeds — CTO, head of product, ops lead.
+
+- Plain language. Minimal jargon.
+- No code blocks unless the user asks.
+- Focus on what happened, who was affected, why, and how it was fixed.
+- Keep under ~150 words unless the user asks for more.
+
+### Modes
+
+Use `$ARGUMENTS` (after stripping the language token) or infer from context:
 
 | Mode | When | Title prefix |
 |------|------|--------------|
-| `postmortem` | default — bug/incident already fixed or mitigated | Postmortem |
-| `incident` | ongoing or just resolved production issue | Incidente |
-| `deploy` | shipping a fix or feature, no incident framing | Deploy |
+| `postmortem` | default — fixed or mitigated bug/incident | Postmortem |
+| `incident` | ongoing or just resolved production issue | Incident |
+| `deploy` | shipping a fix or feature | Deploy |
 | `pr` | summarize an open/merged PR | PR |
-| `commit` | summarize only the last commit | — |
-| `diff` | summarize only uncommitted changes | — |
+| `commit` | last commit only | — |
+| `diff` | uncommitted changes only | — |
 
-## Output format
-
-Return **only** the ready-to-paste text. No preamble like "here is your description".
-
-Default template (`postmortem` / `incident`):
+### Template (English)
 
 ```markdown
-## [Postmortem|Incidente|Deploy] — <short title>
+## [Postmortem|Incident|Deploy] — <short title>
 
-**O que aconteceu**
+**What happened**
 <1–3 sentences — symptom in user/business terms>
 
-**Por quê**
+**Why**
 <1–3 sentences — root cause in plain language, no stack traces>
 
-**Impacto**
+**Impact**
 <who/what was affected; severity; duration if known>
 
-**Como resolvemos**
-1. **Imediato:** <hotfix, manual DB change, rollback, etc.>
-2. **Definitivo:** <code change, deploy, process fix>
+**How we fixed it**
+1. **Immediate:** <hotfix, manual DB change, rollback, etc.>
+2. **Permanent:** <code change, deploy, process fix>
 
-**Prevenção**
-<what stops this from recurring — deploy pending, test added, monitoring, etc.>
+**Prevention**
+<what stops recurrence — deploy pending, test added, monitoring, etc.>
 ```
 
-Shorter variant when the user asks for "poucas palavras" or Slack:
+### Template (Portuguese)
+
+Use the same structure with headings: **O que aconteceu**, **Por quê**, **Impacto**, **Como resolvemos** (Imediato / Definitivo), **Prevenção**.
+
+### Short variant (Slack / one-liner)
 
 ```markdown
-**Resumo:** <one line>
-
-**Causa:** <one line>
-
+**Summary:** <one line>
+**Cause:** <one line>
 **Fix:** <one line>
-
 **Status:** <resolved | mitigated | deploy pending>
 ```
 
-## Writing rules
+### Writing rules
 
-- **O que aconteceu** = what the user/customer saw, not which controller failed.
-- **Por quê** = the conflicting rules, missing check, or bad assumption — not line numbers.
-- **Imediato vs Definitivo** = separate band-aid from permanent fix when both exist.
-- Do not include secrets, customer PII, or internal URLs unless the user provided them.
-- Keep the whole postmortem under ~150 words unless the user asks for more detail.
-- Never add tool-specific fields (Trello labels, Jira custom fields, Linear project IDs).
+- Describe what the user saw, not which controller failed.
+- Separate immediate fix from permanent fix when both exist.
+- No secrets, PII, or internal URLs unless the user provided them.
+- No tool-specific fields (labels, custom fields, project IDs).
 
-## Examples
+---
 
-See [examples.md](../../examples.md) for a full reference postmortem.
+## `/issue:tech` — developer issue body
+
+### Audience
+
+Engineers picking up the ticket — needs enough detail to reproduce, debug, review, or ship.
+
+- Technical and precise. File paths, classes, endpoints, env vars, SQL, flags — when known.
+- Code snippets only when they clarify the fix or repro (keep short).
+- Separate facts from assumptions. Label guesses as **hypothesis**.
+
+### Modes
+
+Same mode tokens as `/issue:desc`. Default: infer `bug` vs `task` from context.
+
+| Mode | When |
+|------|------|
+| `bug` | default for incidents and regressions |
+| `task` | feature work, refactor, chore |
+| `pr` | summarize PR for reviewers |
+| `commit` | last commit only |
+| `diff` | uncommitted changes only |
+
+### Template (English)
+
+```markdown
+## [Bug|Task] — <short title>
+
+### Summary
+<2–4 sentences — technical overview of the problem or change>
+
+### Steps to reproduce
+1. <step>
+2. <step>
+3. <observed result>
+
+_If not reproducible or N/A (e.g. deploy note), write "N/A" and explain why._
+
+### Expected vs actual
+- **Expected:** <behavior>
+- **Actual:** <behavior>
+
+### Root cause
+<technical explanation — controllers, filters, race conditions, config, data state, etc.>
+
+### Fix
+<what changed or will change — files, migrations, flags, manual ops>
+
+### Developer notes
+- <edge cases, rollout order, backwards compatibility, monitoring>
+- <links to logs, traces, PRs — no secrets>
+
+### Checklist
+- [ ] Root cause documented
+- [ ] Fix implemented / deployed
+- [ ] Regression test added (or reason skipped)
+- [ ] Affected users/data verified
+- [ ] Rollback plan clear (if production change)
+```
+
+### Template (Portuguese)
+
+Same sections: **Resumo**, **Passos para reproduzir**, **Esperado vs atual**, **Causa raiz**, **Correção**, **Notas para devs**, **Checklist**.
+
+### Writing rules
+
+- Repro steps must be actionable — another dev should follow them without asking.
+- Checklist items must reflect what actually applies; remove irrelevant rows.
+- Include SQL/console one-liners for hotfixes when the conversation mentions them.
+- Do not include secrets. Redact tokens and PII.
+
+---
 
 ## Workflow
 
-1. Read the conversation and `$ARGUMENTS`.
-2. Gather git/PR context if in a repo and it adds facts not already in the chat.
-3. Pick the mode and template.
-4. Write the summary once, paste-ready.
-5. Do not ask follow-up questions unless critical facts are missing (e.g. impact unknown).
+1. Detect command: `desc` / `description` → stakeholder; `tech` → developer.
+2. Resolve language (auto or override from `$ARGUMENTS`).
+3. Gather git/PR context if useful and not already in the chat.
+4. Pick mode and template.
+5. Return **only** the ready-to-paste markdown — no preamble.
+6. Ask follow-up questions only when critical facts are missing (e.g. impact unknown for a postmortem).
+
+## Examples
+
+See [examples.md](../../examples.md).
