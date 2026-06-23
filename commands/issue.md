@@ -33,5 +33,5 @@ Arguments: `$ARGUMENTS`
 3. Resolve language (auto or override).
 4. If in a git repo, load status, last commit, and diffs.
 5. If mode is `pr` or user mentioned a PR, load `gh pr view` / `gh pr diff`.
-6. Return **only** the ready-to-paste markdown — no intro, no commentary.
-7. Ask whether to save the output to `tmp/issue-<slug>.md` or `tmp/pr-<slug>.md` in the current project.
+6. Write the output to `tmp/issue-<slug>.md` or `tmp/pr-<slug>.md` in the current project (always, unless the user opts out).
+7. Reply with **only the file path** — do not dump the full markdown in chat unless explicitly asked.

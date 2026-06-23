@@ -48,6 +48,12 @@ Sections: summary, repro steps, expected vs actual, root cause, fix, developer n
 
 Supported: `en`, `pt`, `pt-br`, `es`, `--lang=<code>`.
 
+## Output
+
+By default, `/issue` **always writes** to `tmp/issue-<slug>.md` (or `tmp/pr-<slug>.md` for PR content) in the current project and replies with the file path only — optimized for copy-paste into Trello, GitHub, Linear, etc.
+
+Opt out only when explicitly requested (e.g. "no tmp", "show in chat").
+
 ## Context sources
 
 1. Current conversation

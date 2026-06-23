@@ -214,22 +214,23 @@ Same sections: **Resumo**, **Passos para reproduzir**, **Esperado vs atual**, **
 1. Parse `$ARGUMENTS`: type → language → mode.
 2. Gather git/PR context if useful.
 3. Pick template for type.
-4. Return **only** ready-to-paste markdown — no preamble.
-5. Ask follow-up questions only when critical facts are missing.
-6. **After generating the content**, ask whether to save it to a file under `tmp/` in the current project (e.g. `tmp/issue-<slug>.md` or `tmp/pr-<slug>.md`). If the user confirms, write the markdown there and reply with the file path only — do not repeat the full body in chat.
+4. Write the generated markdown to a file under `tmp/` in the **current project** (see [File output](#file-output)).
+5. Reply with **only the file path** — do not repeat the full body in chat unless the user explicitly asks (e.g. "show here", "no file").
+6. Ask follow-up questions only when critical facts are missing.
 
-### Optional file output
+### File output
 
-When the user accepts the `tmp/` file:
+**Default: always save to `tmp/`.** Most users only need the file for copy-paste.
 
 - Use a short, kebab-case slug derived from the title (e.g. `profile-email-reconfirmation`).
 - Prefer `tmp/pr-<slug>.md` when mode is `pr` or the content is clearly a PR description; otherwise `tmp/issue-<slug>.md`.
 - Create `tmp/` if it does not exist.
 - Do not commit the file unless the user asks.
+- Skip the file only when the user explicitly opts out (e.g. "no tmp", "show in chat", "stdout only").
 
-Example prompt after output:
+Example reply:
 
-> Want me to save this to `tmp/pr-profile-email-reconfirmation.md` for easy copy-paste?
+> Saved to `tmp/issue-profile-email-reconfirmation.md`
 
 ## Examples
 
