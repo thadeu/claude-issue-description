@@ -57,13 +57,7 @@ Supported: `en`, `pt`, `pt-br`, `es`, `--lang=<code>`.
 
 ## Install
 
-### Option A — `npx skills add` (skill only)
-
-```bash
-npx skills add thadeu/claude-issue-description -g -a claude-code -a cursor -y
-```
-
-### Option B — `install.sh` (skill + `/issue` slash command)
+**This repo is the single source of truth.** Do not edit `~/.claude/skills/issue` by hand — install or refresh from here.
 
 ```bash
 git clone https://github.com/thadeu/claude-issue-description ~/code/claude-issue-description
@@ -75,16 +69,32 @@ Symlinks:
 - `~/.claude/skills/issue` → `skills/issue`
 - `~/.claude/commands/issue.md` → `commands/issue.md`
 
-Re-run `install.sh` after `git pull`.
+### Verify install
+
+```bash
+~/code/claude-issue-description/install.sh check
+```
+
+Exits `0` when symlinks point at this repo; exits `1` with fix instructions when out of sync (copied files, wrong symlink target, or missing install).
+
+After `git pull`, run `install.sh` again (or `install.sh check` first).
+
+### Alternative — `npx skills add` (skill only, no `/issue` command)
+
+```bash
+npx skills add thadeu/claude-issue-description -g -a claude-code -a cursor -y
+```
+
+Prefer `install.sh` when you want the `/issue` slash command and a explicit sync check against this repo.
 
 ## Layout
 
 ```
 claude-issue-description/
-├── skills/issue/SKILL.md
+├── skills/issue/SKILL.md   # source of truth
 ├── commands/issue.md
 ├── examples.md
-├── install.sh
+├── install.sh              # install | check | help
 └── README.md
 ```
 

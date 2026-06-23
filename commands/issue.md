@@ -5,7 +5,7 @@ argument-hint: "[desc|tech] [en|pt|es|--lang=xx] [postmortem|incident|deploy|bug
 
 Generate a ready-to-paste issue description from the current conversation (and git/PR context when useful).
 
-Follow the `issue` skill (`~/.claude/skills/issue/SKILL.md`).
+Follow the installed `issue` skill from [claude-issue-description](https://github.com/thadeu/claude-issue-description) (`skills/issue/SKILL.md`). If behavior looks stale, run `install.sh check` in that repo and re-run `install.sh` when out of sync.
 
 Arguments: `$ARGUMENTS`
 
@@ -34,3 +34,4 @@ Arguments: `$ARGUMENTS`
 4. If in a git repo, load status, last commit, and diffs.
 5. If mode is `pr` or user mentioned a PR, load `gh pr view` / `gh pr diff`.
 6. Return **only** the ready-to-paste markdown — no intro, no commentary.
+7. Ask whether to save the output to `tmp/issue-<slug>.md` or `tmp/pr-<slug>.md` in the current project.

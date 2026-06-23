@@ -17,6 +17,8 @@ Turn technical work into ready-to-paste markdown for task managers or dev teams.
 
 **Tool-agnostic.** No APIs, no vendor-specific fields. Paste anywhere that accepts text.
 
+**Source of truth:** this file lives in [claude-issue-description](https://github.com/thadeu/claude-issue-description). Install with `install.sh`; run `install.sh check` if the agent reads a stale copy.
+
 ## Command
 
 Single entry point: **`/issue`**
@@ -214,6 +216,20 @@ Same sections: **Resumo**, **Passos para reproduzir**, **Esperado vs atual**, **
 3. Pick template for type.
 4. Return **only** ready-to-paste markdown — no preamble.
 5. Ask follow-up questions only when critical facts are missing.
+6. **After generating the content**, ask whether to save it to a file under `tmp/` in the current project (e.g. `tmp/issue-<slug>.md` or `tmp/pr-<slug>.md`). If the user confirms, write the markdown there and reply with the file path only — do not repeat the full body in chat.
+
+### Optional file output
+
+When the user accepts the `tmp/` file:
+
+- Use a short, kebab-case slug derived from the title (e.g. `profile-email-reconfirmation`).
+- Prefer `tmp/pr-<slug>.md` when mode is `pr` or the content is clearly a PR description; otherwise `tmp/issue-<slug>.md`.
+- Create `tmp/` if it does not exist.
+- Do not commit the file unless the user asks.
+
+Example prompt after output:
+
+> Want me to save this to `tmp/pr-profile-email-reconfirmation.md` for easy copy-paste?
 
 ## Examples
 
