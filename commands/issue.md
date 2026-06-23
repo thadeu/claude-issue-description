@@ -13,12 +13,13 @@ Arguments: `$ARGUMENTS`
 
 1. **Type** — first token if it matches `desc`, `description`, `tech`, `dev` (default: `desc`)
 2. **Language** — next token if it matches `en`, `pt`, `es`, `--lang=xx` (default: session language)
-3. **Mode** — remaining tokens (default: infer from context; `postmortem` for desc, `bug` for tech)
+3. **Mode** — remaining tokens (default: `incident` for desc, `bug` for tech; use `postmortem` only for critical production failures that require client communication)
 
 ## Examples
 
 ```
 /issue
+/issue desc
 /issue tech
 /issue desc postmortem
 /issue desc en incident

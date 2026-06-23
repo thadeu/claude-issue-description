@@ -1,6 +1,28 @@
 # Examples
 
-## Stakeholder postmortem (`/issue desc`)
+## Stakeholder incident (`/issue desc` — default)
+
+```markdown
+## Incident — Shortcode disabled on dialers
+
+**What happened**
+Dialer accounts had shortcode/transfer disabled at runtime even when the configuration flag was enabled.
+
+**Why**
+Usersync read shortcode from each menu digit, but dialer UIs only expose that setting at the configuration level. A data backfill set all digits to disabled.
+
+**Impact**
+Affected dialer configurations (API, Zendesk, click-to-call, chrome extension, dialer queue, dialer automatic).
+
+**How we fixed it**
+1. **Immediate:** code fix in usersync payload builder.
+2. **Permanent:** regression tests; re-sync impacted accounts after deploy.
+
+**Prevention**
+Automated tests per configuration kind; validate staging after deploy.
+```
+
+## Stakeholder postmortem (`/issue desc postmortem` — critical, client-facing only)
 
 ```markdown
 ## Postmortem — User signup redirect loop

@@ -24,9 +24,10 @@ Turn technical work into ready-to-paste markdown for task managers or dev teams.
 Single entry point: **`/issue`**
 
 ```
-/issue                          # desc, auto language, inferred mode
+/issue                          # desc + incident, auto language
 /issue tech                     # developer issue body
-/issue desc postmortem          # stakeholder postmortem
+/issue desc                     # stakeholder incident (CTO, Trello)
+/issue desc postmortem          # critical failure — client-facing report
 /issue desc en incident         # English incident summary
 /issue tech pt bug              # Portuguese technical bug report
 /issue tech pr                  # PR-focused technical summary
@@ -36,7 +37,7 @@ Single entry point: **`/issue`**
 
 | Type | Aliases | Audience | Default mode |
 |------|---------|----------|--------------|
-| `desc` | `description` | Stakeholders (CTO, PM, ops) | `postmortem` |
+| `desc` | `description` | Stakeholders (CTO, PM, ops) | `incident` |
 | `tech` | `dev`, `developer` | Engineers | `bug` |
 
 If no type is given, use `desc`.
@@ -47,8 +48,8 @@ If no type is given, use `desc`.
 
 | Mode | When | Title prefix |
 |------|------|--------------|
-| `postmortem` | default — fixed or mitigated bug/incident | Postmortem |
-| `incident` | ongoing or just resolved production issue | Incident |
+| `incident` | **default** — status update for CTO, Trello, internal stakeholders | Incident |
+| `postmortem` | critical bugfix with serious production failure; requires formal client communication | Postmortem |
 | `deploy` | shipping a fix or feature | Deploy |
 | `pr` | summarize an open/merged PR | PR |
 | `commit` | last commit only | — |
@@ -212,11 +213,12 @@ Same sections: **Resumo**, **Passos para reproduzir**, **Esperado vs atual**, **
 ## Workflow
 
 1. Parse `$ARGUMENTS`: type → language → mode.
-2. Gather git/PR context if useful.
-3. Pick template for type.
-4. Write the generated markdown to a file under `tmp/` in the **current project** (see [File output](#file-output)).
-5. Reply with **only the file path** — do not repeat the full body in chat unless the user explicitly asks (e.g. "show here", "no file").
-6. Ask follow-up questions only when critical facts are missing.
+2. For `desc` without an explicit mode, use `incident` (not `postmortem`). Reserve `postmortem` only when the user asks for it or the work is a critical production failure that must be reported to customers.
+3. Gather git/PR context if useful.
+4. Pick template for type.
+5. Write the generated markdown to a file under `tmp/` in the **current project** (see [File output](#file-output)).
+6. Reply with **only the file path** — do not repeat the full body in chat unless the user explicitly asks (e.g. "show here", "no file").
+7. Ask follow-up questions only when critical facts are missing.
 
 ### File output
 

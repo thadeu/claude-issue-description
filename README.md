@@ -9,8 +9,9 @@ Agent skill that turns technical work into **ready-to-paste markdown** for task 
 One slash command, two types:
 
 ```
-/issue                    # stakeholder summary (default)
-/issue desc postmortem    # same, explicit type
+/issue                    # stakeholder incident (default)
+/issue desc               # same — CTO / Trello update
+/issue desc postmortem    # critical failure — client-facing report
 /issue tech               # developer issue body
 /issue tech bug           # technical bug report
 /issue desc en incident   # English stakeholder incident
@@ -24,7 +25,9 @@ One slash command, two types:
 
 ### `desc` modes
 
-`postmortem` (default), `incident`, `deploy`, `pr`, `commit`, `diff`
+`incident` (default), `postmortem`, `deploy`, `pr`, `commit`, `diff`
+
+Use `postmortem` only for critical production failures that require formal communication to customers.
 
 Sections: what happened, why, impact, how we fixed it, prevention.
 
@@ -41,7 +44,8 @@ Sections: summary, repro steps, expected vs actual, root cause, fix, developer n
 **Override** with a language token:
 
 ```
-/issue en desc postmortem
+/issue desc pt
+/issue desc postmortem
 /issue tech pt
 /issue desc --lang=es
 ```

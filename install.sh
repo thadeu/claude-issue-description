@@ -171,6 +171,7 @@ Verify anytime:
 
 Try:
   /issue
+  /issue desc
   /issue desc postmortem
   /issue tech
   /issue tech en bug
